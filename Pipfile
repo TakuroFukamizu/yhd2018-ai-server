@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+bottle = "*"
+python-dotenv = "*"
+paho-mqtt = "*"
+numpy = "*"
+pillow = "*"
+envparse = "*"
+keras = "*"
+tensorflow = "*"
+matplotlib = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.5"
