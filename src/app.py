@@ -19,7 +19,8 @@ from lib.Predictor import Predictor
 from lib.MyEncoder import MyEncoder
 # from lib.IO import IOManager
 
-import io as cStringIO
+from io import BytesIO
+import base64
 
 import paho.mqtt.client as mqtt
 
@@ -46,16 +47,17 @@ hasInternalError = False
 predictor = Predictor()
 predictor.load_model(model_path, anchors_path, classes_path)
 
-
 def on_connect(client, userdata, flags, respons_code):
     print('status {0}'.format(respons_code))
     client.subscribe(topic_image)
 
 def on_message(client, userdata, msg):
     print(msg.topic + ' ' + str(msg.payload))
-    image_base64 = str(msg.payload)
+    # image_base64 = str(msg.payload)
+    image_base64 = msg.payload
     try:
-        image = Image.open(cStringIO.StringIO(image_base64))
+        image = Image.open(BytesIO(base64.b64decode(image_base64)))
+        # image = Image.open(cStringIO.StringIO(image_base64))
         if image is None:
             raise Exception('image is invalid')
         results = run_detect(image)
