@@ -28,24 +28,27 @@ import paho.mqtt.client as mqtt
 
 env.read_envfile()
 
-# WEIGHT_FILE = env("WEIGHT_FILE", os.path.join(model_dir, "mask_rcnn_msg.h5"))
-# LABEL_FILE = env.str("LABEL_FILE", default=os.path.join(model_dir, "names.txt"))
-
-host = '192.168.179.7'
-port = 1883
+MQ_HOST = env.str("MQ_HOST", default='192.168.179.7')
+MQ_PORT = env.int("MQ_PORT", default=1883)
+# host = '192.168.179.7'
+# port = 1883
 topic_image = '/pub/gun/image'
 topic_predicted = '/sub/gun/predicted'
 
-model_path = 'model_data/yolo-tiny.h5'
-anchors_path = 'model_data/tiny_yolo_anchors.txt'
-classes_path = 'model_data/coco_classes.txt'
+YOLO_MODEL_PATH = env.str("YOLO_MODEL_PATH", default='model_data/yolo-tiny.h5')
+YOLO_ANCHORS_PATH = env.str("YOLO_ANCHORS_PATH", default='model_data/tiny_yolo_anchors.txt')
+YOLO_CLASSES_PATH = env.str("YOLO_CLASSES_PATH", default='model_data/coco_classes.txt')
 
-PORT = env.int("PORT", default=8080)
+# model_path = 'model_data/yolo-tiny.h5'
+# anchors_path = 'model_data/tiny_yolo_anchors.txt'
+# classes_path = 'model_data/coco_classes.txt'
+
+# PORT = env.int("PORT", default=8080)
 
 hasInternalError = False
 
 predictor = Predictor()
-predictor.load_model(model_path, anchors_path, classes_path)
+predictor.load_model(YOLO_MODEL_PATH, YOLO_ANCHORS_PATH, YOLO_CLASSES_PATH)
 
 def on_connect(client, userdata, flags, respons_code):
     print('status {0}'.format(respons_code))
@@ -119,7 +122,7 @@ if __name__ == '__main__':
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect(host, port=port, keepalive=60)
+    client.connect(MQ_HOST, port=MQ_PORT, keepalive=60)
 
     # 待ち受け状態にする
     client.loop_forever()
