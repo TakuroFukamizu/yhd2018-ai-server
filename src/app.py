@@ -76,18 +76,17 @@ def run_detect(image):
     items = []
     try:
         results = predictor.predict(image)
-        for result in results: # TODO: 要確認
-            for box in result:
-                items.append({
-                    "id": box.class_index,
-                    "name": box.class_label,
-                    "detected_area": [
-                        box.left,
-                        box.top,
-                        box.width,
-                        box.height
-                    ]
-                })
+        for box in results: # TODO: 要確認
+            items.append({
+                "id": box.class_index,
+                "name": box.class_label,
+                "detected_area": [
+                    box.left,
+                    box.top,
+                    box.width,
+                    box.height
+                ]
+            })
     except Exception as ex:
         print(ex)
         print(traceback.format_exc())
